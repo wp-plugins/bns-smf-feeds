@@ -1,4 +1,4 @@
-=== BNS Featured Category ===
+=== BNS SMF Feeds ===
 Contributors: cais
 Donate link: http://buynowshop.com
 Tags: RSS, SMF, Multiple Widgets, Option Panel
