@@ -1,4 +1,4 @@
-=== BNS Featured Category ===
+=== BNS SMF Feeds ===
 Contributors: cais
 Donate link: http://buynowshop.com
 Tags: RSS, SMF, Multiple Widgets, Option Panel
@@ -61,6 +61,9 @@ Once the widget is activated and placed into a widget ready area, there will be 
 1. The options panel.
 
 == Changelog ==
+
+= 1.0.1 =
+* minor corrections to description and screenshot
 
 = 1.0 =
 * Initial Release.
