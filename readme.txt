@@ -4,13 +4,13 @@ Donate link: http://buynowshop.com
 Tags: RSS, SMF, Multiple Widgets, Option Panel
 Requires at least: 2.8
 Tested up to: 2.9
-Stable tag: 1.0
+Stable tag: 1.0.1
 
 Plugin with multi-widget functionality that builds an SMF Forum RSS2 feed url by user option choices; and, displays a SMF forum feed.
 
 == Description ==
 
-Plugin with multi-widget functionality that builds an SMF Forum RSS2 feed url by user option choices; and, displays a SMF forum feed. The widget includes the additional option to include in the feed: specific boards and/or specific categories. There are also check boxes to include the feed item date, summary, and author. Please note, the author option is not currently supported in a standard SMF forum feed, but is included for future possibilities.
+Plugin with multi-widget functionality that builds an SMF Forum RSS2 feed url by user option choices; and, displays a SMF forum feed. The widget includes the additional option to include in the feed: specific boards and/or specific categories. There are also check boxes to include the feed item date and the item summary, too.
 
 == Installation ==
 
@@ -61,6 +61,9 @@ Once the widget is activated and placed into a widget ready area, there will be 
 1. The options panel.
 
 == Changelog ==
+
+= 1.0.1 =
+* minor corrections to description and screenshot
 
 = 1.0 =
 * Initial Release.
