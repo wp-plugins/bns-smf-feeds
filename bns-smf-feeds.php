@@ -3,7 +3,7 @@
 Plugin Name: BNS SMF Feeds
 Plugin URI: http://buynowshop.com/plugins/bns-smf-feeds/
 Description: Plugin with multi-widget functionality that builds an SMF Forum RSS feed url by user option choices; and, displays a SMF forum feed.
-Version: 1.0.1
+Version: 1.1
 Author: Edward Caissie
 Author URI: http://edwardcaissie.com/
 */
@@ -164,8 +164,8 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
       if ( empty($smf_feed_url) ) {
         $smf_feed_url   = '';
         $smf_feed_url   .= $smf_forum_url . "index.php?";
-        /* $smf_feed_url   .= "type=" . $smf_feed_type . ";"; */ /* Future version? */
-        $smf_feed_url   .= "type=rss2;";
+        $smf_feed_url   .= "type=" . $smf_feed_type . ";";
+        /* $smf_feed_url   .= "type=rss2;"; */
         $smf_feed_url   .= "action=.xml;";
         if ( !$smf_sub_action ) {
             $smf_feed_url .= "sa=news;"; /* sets feed to Recent Topics */
@@ -254,7 +254,7 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
     	$defaults = array(
 				'title'           => __('SMF Forum Feed'),
 				'smf_forum_url'   => '',
-				'smf_feed_type'   => 'rss',
+				'smf_feed_type'   => 'rss2',  /* no reason ... just seems the most current format */
 				'smf_sub_action'  => false,   /* default to 'news' or recent Topics, check for 'recent' Posts */
 				'smf_boards'      => '',      /* defaults to all */
 				'smf_categories'  => '',      /* defaults to all */
@@ -277,17 +277,15 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 			<input id="<?php echo $this->get_field_id( 'smf_forum_url' ); ?>" name="<?php echo $this->get_field_name( 'smf_forum_url' ); ?>" value="<?php echo $instance['smf_forum_url']; ?>" style="width:100%;" />
 		</p>
 
-    <!-- Future version?
     <p>
 			<label for="<?php echo $this->get_field_id( 'smf_feed_type' ); ?>"><?php _e('Feed Type:'); ?></label>
 			<select id="<?php echo $this->get_field_id( 'smf_feed_type' ); ?>" name="<?php echo $this->get_field_name( 'smf_feed_type' ); ?>" class="widefat" style="width:100%;">
-				<option <?php if ( 'rss' == $instance['format'] ) echo 'selected="selected"'; ?>>rss</option>
-				<option <?php if ( 'rss2' == $instance['format'] ) echo 'selected="selected"'; ?>>rss2</option>
-				<option <?php if ( 'atom' == $instance['format'] ) echo 'selected="selected"'; ?>>atom</option>
-				<option <?php if ( 'rdf' == $instance['format'] ) echo 'selected="selected"'; ?>>rdf</option>
+				<option <?php if ( 'rss' == $instance['smf_feed_type'] ) echo 'selected="selected"'; ?>>rss</option>
+				<option <?php if ( 'rss2' == $instance['smf_feed_type'] ) echo 'selected="selected"'; ?>>rss2</option>
+				<option <?php if ( 'atom' == $instance['smf_feed_type'] ) echo 'selected="selected"'; ?>>atom</option>
+				<option <?php if ( 'rdf' == $instance['smf_feed_type'] ) echo 'selected="selected"'; ?>>rdf</option>
 			</select>
 		</p>
-		-->
 
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( (bool) $instance['smf_sub_action'], true ); ?> id="<?php echo $this->get_field_id( 'smf_sub_action' ); ?>" name="<?php echo $this->get_field_name( 'smf_sub_action' ); ?>" />

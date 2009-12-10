@@ -4,13 +4,13 @@ Donate link: http://buynowshop.com
 Tags: RSS, SMF, Multiple Widgets, Option Panel
 Requires at least: 2.8
 Tested up to: 2.9
-Stable tag: 1.0.1
+Stable tag: 1.1
 
-Plugin with multi-widget functionality that builds an SMF Forum RSS2 feed url by user option choices; and, displays a SMF forum feed.
+Plugin with multi-widget functionality that builds an SMF Forum RSS feed url by user option choices; and, displays a SMF forum feed.
 
 == Description ==
 
-Plugin with multi-widget functionality that builds an SMF Forum RSS2 feed url by user option choices; and, displays a SMF forum feed. The widget includes the additional option to include in the feed: specific boards and/or specific categories. There are also check boxes to include the feed item date and the item summary, too.
+Plugin with multi-widget functionality that builds an SMF Forum RSS feed url by user option choices; and, displays a SMF forum feed. The widget includes the additional option to include in the feed: specific boards and/or specific categories. There are also check boxes to include the feed item date and the item summary, too.
 
 == Installation ==
 
@@ -22,6 +22,7 @@ This section describes how to install the plugin and get it working.
 4. Set options to personal preferences:
 * Widget Title
 * Specify the full URL to the SMF Forum (e.g.: http://www.simplemachines.org/community/)
+* Choose feed type from drop-down menu (RSS, RSS2, Atom, RDF)
 * The default is by recent Topics, or choose to display recent posts
 * The default displays all items able to be seen by a "guest".
 * Choose specific boards (or categories of boards) to include only.
@@ -39,6 +40,7 @@ This section describes how to install the plugin and get it working.
 7. Set options to personal preferences:
 * Widget Title
 * Specify the full URL to the SMF Forum (e.g.: http://www.simplemachines.org/community/)
+* Choose feed type from drop-down menu (RSS, RSS2, Atom, RDF)
 * The default is by recent Topics, or choose to display recent posts
 * The default displays all items able to be seen by a "guest".
 * Choose specific boards (or categories of boards) to include only.
@@ -61,6 +63,10 @@ Once the widget is activated and placed into a widget ready area, there will be 
 1. The options panel.
 
 == Changelog ==
+
+= 1.1 =
+* added drop-down menu to option panel to choose feed type, default set to RSS2
+* updated the Option Panel screen shot
 
 = 1.0.1 =
 * minor corrections to description and screenshot
