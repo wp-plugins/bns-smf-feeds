@@ -12,7 +12,7 @@ Plugin with multi-widget functionality that builds an SMF Forum RSS feed url by 
 
 Plugin with multi-widget functionality that builds an SMF Forum RSS feed url by user option choices; and, displays a SMF forum feed. The widget includes the additional option to include in the feed: specific boards and/or specific categories. There are also check boxes to include the feed item date and the item summary, too.
 
-NB: If updating from a version before 1.1 please make sure to save you widget options for each instance. ~cais
+NB: If updating from a version before 1.1 please make sure to re-save your widget options (check your feed type) for each instance after upgrading. This will set the feed type correctly using the new feed drop-down selection option. Thanks! ~cais
 
 == Installation ==
 
