@@ -3,7 +3,7 @@
 Plugin Name: BNS SMF Feeds
 Plugin URI: http://buynowshop.com/plugins/bns-smf-feeds/
 Description: Plugin with multi-widget functionality that builds an SMF Forum RSS feed url by user option choices; and, displays a SMF forum feed.
-Version: 1.1
+Version: 1.1.1
 Author: Edward Caissie
 Author URI: http://edwardcaissie.com/
 */
