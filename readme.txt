@@ -22,6 +22,7 @@ This section describes how to install the plugin and get it working.
 2. Activate through the 'Plugins' menu.
 3. Place the BNS SMF Feeds widget appropriately in the Appearance | Widgets section of the dashboard.
 4. Set options to personal preferences:
+
 * Widget Title
 * Specify the full URL to the SMF Forum (e.g.: http://www.simplemachines.org/community/)
 * Choose feed type from drop-down menu (RSS, RSS2, Atom, RDF)
@@ -40,6 +41,7 @@ This section describes how to install the plugin and get it working.
 5. Activate through the 'Plugins' menu.
 6. Place the BNS SMF Feeds widget appropriately in the Appearance | Widgets section of the dashboard.
 7. Set options to personal preferences:
+
 * Widget Title
 * Specify the full URL to the SMF Forum (e.g.: http://www.simplemachines.org/community/)
 * Choose feed type from drop-down menu (RSS, RSS2, Atom, RDF)
