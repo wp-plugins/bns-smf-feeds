@@ -4,7 +4,7 @@ Donate link: http://buynowshop.com
 Tags: RSS, SMF, Multiple Widgets, Option Panel
 Requires at least: 2.8
 Tested up to: 2.9.1
-Stable tag: 1.1.1
+Stable tag: 1.2
 
 Plugin with multi-widget functionality that builds an SMF Forum RSS feed url by user option choices; and, displays a SMF forum feed.
 
@@ -65,6 +65,10 @@ Once the widget is activated and placed into a widget ready area, there will be 
 1. The options panel.
 
 == Changelog ==
+= 1.2 =
+* added feed refresh frequency (in seconds) option
+* added new screenshot of option panel
+
 = 1.1.1 =
 * compatibility check for 2.9.1 completed
 

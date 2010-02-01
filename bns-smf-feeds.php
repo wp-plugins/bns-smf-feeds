@@ -3,7 +3,7 @@
 Plugin Name: BNS SMF Feeds
 Plugin URI: http://buynowshop.com/plugins/bns-smf-feeds/
 Description: Plugin with multi-widget functionality that builds an SMF Forum RSS feed url by user option choices; and, displays a SMF forum feed.
-Version: 1.1.1
+Version: 1.2
 Author: Edward Caissie
 Author URI: http://edwardcaissie.com/
 */
@@ -24,7 +24,34 @@ function load_my_bns_smf_feeds_widget() {
 
 /* ---- */
 /* ---- Why re-invent the wheel? ---- */
-/* ---- taken from ../wp-includes/deafult-widgets.php ---- */
+
+/* ---- taken from ../wp-includes/feed.php ---- */
+/**
+ * Build SimplePie object based on RSS or Atom feed from URL.
+ *
+ * @since 2.8
+ *
+ * @param string $url URL to retrieve feed
+ * @return WP_Error|SimplePie WP_Error object on failure or SimplePie object on success
+ */
+function bns_fetch_feed($url) {
+	require_once (ABSPATH . WPINC . '/class-feed.php');
+
+	$feed = new SimplePie();
+	$feed->set_feed_url($url);
+	$feed->set_cache_class('WP_Feed_Cache');
+	$feed->set_file_class('WP_SimplePie_File');
+	$feed->set_cache_duration(apply_filters('wp_feed_cache_transient_lifetime', $feed_refresh));
+	$feed->init();
+	$feed->handle_content_type();
+
+	if ( $feed->error() )
+		return new WP_Error('simplepie-error', $feed->error());
+
+	return $feed;
+}
+
+/* ---- taken from ../wp-includes/default-widgets.php ---- */
 /**
  * Display the RSS entries in a list.
  *
@@ -36,10 +63,10 @@ function load_my_bns_smf_feeds_widget() {
 /* ---- function wp_widget_rss_output( $rss, $args = array() ) { ---- */
 function bns_wp_widget_rss_output( $rss, $args = array() ) {
 	if ( is_string( $rss ) ) {
-		$rss = fetch_feed($rss);
+		$rss = bns_fetch_feed($rss);
 	} elseif ( is_array($rss) && isset($rss['url']) ) {
 		$args = $rss;
-		$rss = fetch_feed($rss['url']);
+		$rss = bns_fetch_feed($rss['url']);
 	} elseif ( !is_object($rss) ) {
 		return;
 	}
@@ -158,6 +185,7 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
   		$show_author    = $instance['show_author'];
   		$show_date      = $instance['show_date'];
   		$show_summary   = $instance['show_summary'];
+      $feed_refresh   = $instance['feed_refresh'];
   		
   		$smf_feed_url   = $instance['smf_feed_url'];
   		
@@ -185,7 +213,7 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
   		if ( empty($smf_feed_url) )
   			return;
   
-  		$rss = fetch_feed($smf_feed_url);
+  		$rss = bns_fetch_feed($smf_feed_url);
   		$title = $instance['title'];
   		$desc = '';
   		$link = '';
@@ -243,6 +271,7 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
   		$instance['show_author']    = $new_instance['show_author'];
       $instance['show_date']      = $new_instance['show_date'];
   		$instance['show_summary']   = $new_instance['show_summary'];
+  		$instance['feed_refresh']   = $new_instance['feed_refresh'];
 
   		$instance['smf_feed_url']   = $new_instance['smf_feed_url'];
   		
@@ -261,7 +290,8 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 				'limit_count'     => '10',
 				'show_author'     => false,   /* Not currently supported by SMF feeds; future version? */
 				'show_date'       => false,
-				'show_summary'    => false
+				'show_summary'    => false,
+				'feed_refresh'    => '43200'  /* Default value as noted in feed.php core file */
         );
       $instance['number'] = $this->number;
     	$instance = wp_parse_args( (array) $instance, $defaults );
@@ -331,6 +361,11 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
         </td>
       </tr>
     </table>
+    
+    <p>
+			<label for="<?php echo $this->get_field_id( 'feed_refresh' ); ?>"><?php _e('Feed Refresh frequency (in seconds):'); ?></label>
+			<input id="<?php echo $this->get_field_id( 'feed_refresh' ); ?>" name="<?php echo $this->get_field_name( 'feed_refresh' ); ?>" value="<?php echo $instance['feed_refresh']; ?>" style="width:100%;" />
+		</p>
 
 		<?php
 	}
