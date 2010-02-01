@@ -83,3 +83,6 @@ Once the widget is activated and placed into a widget ready area, there will be 
 
 = 1.0 =
 * Initial Release.
+
+== Upgrade Notice ==
+v1.2 adds a requested option to better control the feed refresh frequency.
