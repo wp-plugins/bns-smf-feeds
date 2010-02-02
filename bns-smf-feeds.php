@@ -3,7 +3,7 @@
 Plugin Name: BNS SMF Feeds
 Plugin URI: http://buynowshop.com/plugins/bns-smf-feeds/
 Description: Plugin with multi-widget functionality that builds an SMF Forum RSS feed url by user option choices; and, displays a SMF forum feed.
-Version: 1.2
+Version: 1.3
 Author: Edward Caissie
 Author URI: http://edwardcaissie.com/
 */
@@ -53,15 +53,13 @@ function bns_fetch_feed($url) {
 
 /* ---- taken from ../wp-includes/default-widgets.php ---- */
 /**
- * Display the RSS entries in a list.
- *
- * @since 2.5.0
- *
- * @param string|array|object $rss RSS url.
- * @param array $args Widget arguments.
- */
-/* ---- function wp_widget_rss_output( $rss, $args = array() ) { ---- */
+* Display the RSS entries in a list.
+*
+* @since 2.5.0
+**/
+
 function bns_wp_widget_rss_output( $rss, $args = array() ) {
+  global $blank_window;
 	if ( is_string( $rss ) ) {
 		$rss = bns_fetch_feed($rss);
 	} elseif ( is_array($rss) && isset($rss['url']) ) {
@@ -81,12 +79,6 @@ function bns_wp_widget_rss_output( $rss, $args = array() ) {
 	$args = wp_parse_args( $args, $default_args );
 	extract( $args, EXTR_SKIP );
 
-/* ---- Interferes with limit set with bns-smf-feeds widget
-  $items = (int) $items;
-	if ( $items < 1 || 20 < $items )
-		$items = 10;
----- */
-
   $show_summary  = (int) $show_summary;
 	$show_author   = (int) $show_author;
 	$show_date     = (int) $show_date;
@@ -98,7 +90,6 @@ function bns_wp_widget_rss_output( $rss, $args = array() ) {
 		return;
 	}
 
-	/* ---- echo '<ul>'; ---- */
 	echo '<ul class="bns-smf-feeds">';
 	foreach ( $rss->get_items(0, $items) as $item ) {
 		$link = $item->get_link();
@@ -110,12 +101,10 @@ function bns_wp_widget_rss_output( $rss, $args = array() ) {
 			$title = __('Untitled');
 
 		$desc = str_replace(array("\n", "\r"), ' ', esc_attr(strip_tags(@html_entity_decode($item->get_description(), ENT_QUOTES, get_option('blog_charset')))));
-		/* ---- $desc = wp_html_excerpt( $desc, 360 ) . ' [&hellip;]'; ---- */
 		$desc = wp_html_excerpt( $desc, 360 );
 		$desc = esc_html( $desc );
 
 		if ( $show_summary ) {
-			/* ---- $summary = "<div class='rssSummary'>$desc</div>"; ---- */
 			$summary = "<div class='bns-smf-feeds rssSummary'>$desc</div>";
 		} else {
 			$summary = '';
@@ -127,7 +116,6 @@ function bns_wp_widget_rss_output( $rss, $args = array() ) {
 
 			if ( $date ) {
 				if ( $date_stamp = strtotime( $date ) )
-          /* ---- $date = '<span class="rss-date">' . date_i18n( get_option( 'date_format' ), $date_stamp ) . '</span>'; ---- */
 					$date = '<br /><span class="bns-smf-feeds rss-date">' . date_i18n( get_option( 'date_format' ), $date_stamp ) . '</span>';
 				else
 					$date = '';
@@ -144,11 +132,9 @@ function bns_wp_widget_rss_output( $rss, $args = array() ) {
 		}
 
 		if ( $link == '' ) {
-			/* ---- echo "<li>$title{$date}{$summary}{$author}</li>"; ---- */
 			echo "<li class='bns-smf-feeds'>$title{$date}{$summary}{$author}</li>";
 		} else {
-			/* ---- echo "<li><a class='rsswidget' href='$link' title='$desc'>$title</a>{$date}{$summary}{$author}</li>"; ---- */
-			echo "<li><a class='bns-smf-feeds rsswidget' href='$link' title='$desc'>$title</a>{$date}{$summary}{$author}</li>";
+			echo "<li><a class='bns-smf-feeds rsswidget' href='$link' " . (!$blank_window ? "target=''" : "target='_blank'") . " title='$desc'>$title</a>{$date}{$summary}{$author}</li>";
 		}
 	}
 	echo '</ul>';
@@ -172,6 +158,7 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
   	}
 	
 	function widget( $args, $instance ) {
+      global $blank_window;
   		extract( $args );
   
   		/* User-selected settings. */
@@ -185,6 +172,7 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
   		$show_author    = $instance['show_author'];
   		$show_date      = $instance['show_date'];
   		$show_summary   = $instance['show_summary'];
+  		$blank_window   = $instance['blank_window'];
       $feed_refresh   = $instance['feed_refresh'];
   		
   		$smf_feed_url   = $instance['smf_feed_url'];
@@ -193,7 +181,6 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
         $smf_feed_url   = '';
         $smf_feed_url   .= $smf_forum_url . "index.php?";
         $smf_feed_url   .= "type=" . $smf_feed_type . ";";
-        /* $smf_feed_url   .= "type=rss2;"; */
         $smf_feed_url   .= "action=.xml;";
         if ( !$smf_sub_action ) {
             $smf_feed_url .= "sa=news;"; /* sets feed to Recent Topics */
@@ -204,7 +191,7 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
         $smf_feed_url   .= "c=" . $smf_categories . ";"; /* specify categories */
         $smf_feed_url   .= "limit=" . $limit_count;
       }
-      
+
       /* ---- */
       /* ---- taken from ../wp-includes/default-widgets.php ---- */
   		while ( stristr($smf_feed_url, 'http') != $smf_feed_url )
@@ -271,6 +258,7 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
   		$instance['show_author']    = $new_instance['show_author'];
       $instance['show_date']      = $new_instance['show_date'];
   		$instance['show_summary']   = $new_instance['show_summary'];
+  		$instance['blank_window']   = $new_instance['blank_window'];
   		$instance['feed_refresh']   = $new_instance['feed_refresh'];
 
   		$instance['smf_feed_url']   = $new_instance['smf_feed_url'];
@@ -291,6 +279,7 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 				'show_author'     => false,   /* Not currently supported by SMF feeds; future version? */
 				'show_date'       => false,
 				'show_summary'    => false,
+				'blank_window'    => false,
 				'feed_refresh'    => '43200'  /* Default value as noted in feed.php core file */
         );
       $instance['number'] = $this->number;
@@ -357,6 +346,12 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
          	<p>
       			<input class="checkbox" type="checkbox" <?php checked( (bool) $instance['show_summary'], true ); ?> id="<?php echo $this->get_field_id( 'show_summary' ); ?>" name="<?php echo $this->get_field_name( 'show_summary' ); ?>" />
       			<label for="<?php echo $this->get_field_id( 'show_summary' ); ?>"><?php _e('Show item summary?'); ?></label>
+          </p>
+        </td>
+        <td>
+         	<p>
+      			<input class="checkbox" type="checkbox" <?php checked( (bool) $instance['blank_window'], true ); ?> id="<?php echo $this->get_field_id( 'blank_window' ); ?>" name="<?php echo $this->get_field_name( 'blank_window' ); ?>" />
+      			<label for="<?php echo $this->get_field_id( 'blank_window' ); ?>"><?php _e('Open in new window?'); ?></label>
           </p>
         </td>
       </tr>
