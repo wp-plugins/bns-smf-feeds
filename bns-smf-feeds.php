@@ -3,7 +3,7 @@
 Plugin Name: BNS SMF Feeds
 Plugin URI: http://buynowshop.com/plugins/bns-smf-feeds/
 Description: Plugin with multi-widget functionality that builds an SMF Forum RSS feed url by user option choices; and, displays a SMF forum feed.
-Version: 1.3
+Version: 1.3.1
 Author: Edward Caissie
 Author URI: http://edwardcaissie.com/
 */
@@ -221,7 +221,7 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
   		$smf_feed_url = esc_url(strip_tags($smf_feed_url));
   		$icon = includes_url('images/rss.png');
   		if ( $title )
-  			$title = "<a class='bns-smf-feeds rsswidget' href='$smf_feed_url' title='" . esc_attr(__('Syndicate this content')) ."'><img style='background:orange;color:white;border:none;' width='14' height='14' src='$icon' alt='RSS' /></a> <a class='bns-smf-feeds rsswidget' href='$link' title='$desc'>$title</a>";
+  			$title = "<a class='bns-smf-feeds rsswidget' href='$smf_feed_url' " . (!$blank_window ? "target=''" : "target='_blank'") . " title='" . esc_attr(__('Syndicate this content')) ."'><img style='background:orange;color:white;border:none;' width='14' height='14' src='$icon' alt='RSS' /></a> <a class='bns-smf-feeds rsswidget' href='$link' " . (!$blank_window ? "target=''" : "target='_blank'") . " title='$desc'>$title</a>";
       /* ---- ... and the wheels on the bus go round and round ... ---- */
       /* ---- */
       
