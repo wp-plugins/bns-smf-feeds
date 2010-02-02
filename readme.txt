@@ -90,4 +90,4 @@ Once the widget is activated and placed into a widget ready area, there will be 
 * Initial Release.
 
 == Upgrade Notice ==
-v1.2 adds a requested option to better control the feed refresh frequency.
+v1.3 adds an option to control if feeds links open in a new window.
