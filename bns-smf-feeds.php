@@ -3,9 +3,30 @@
 Plugin Name: BNS SMF Feeds
 Plugin URI: http://buynowshop.com/plugins/bns-smf-feeds/
 Description: Plugin with multi-widget functionality that builds an SMF Forum RSS feed url by user option choices; and, displays a SMF forum feed.
-Version: 1.3.1
+Version: 1.3.1.1
 Author: Edward Caissie
 Author URI: http://edwardcaissie.com/
+*/
+
+/*
+**
+* Copyright 2010 Edward Caissie
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*
+* Plugin Changelog: see readme.txt
+**
 */
 
 global $wp_version;

@@ -4,7 +4,7 @@ Donate link: http://buynowshop.com
 Tags: RSS, SMF, Multiple Widgets, Option Panel
 Requires at least: 2.8
 Tested up to: 2.9.1
-Stable tag: 1.3.1
+Stable tag: 1.3.1.1
 
 Plugin with multi-widget functionality that builds an SMF Forum RSS feed url by user option choices; and, displays a SMF forum feed.
 
@@ -63,10 +63,24 @@ The plugin uses a variation of the WordPress RSS Output that assigns several rss
 Once the widget is activated and placed into a widget ready area, there will be a standard RSS icon displayed beside the feed title. This icon will have the url anchored to it, simply click on it to subscribe to the feed directly.
 
 == Screenshots ==
-
 1. The options panel.
 
+== Other Notes ==
+* Copyright 2010 Edward Caissie
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+== Upgrade Notice ==
+Please stay current with your WordPress installation, your active theme, and your plugins.
+
 == Changelog ==
+= 1.3.1.1 =
+* clarified the plugin's release under a GPL license
+
 = 1.3.1 =
 * tied all links in the widget to use the "option to open links in new window"
 
@@ -91,6 +105,3 @@ Once the widget is activated and placed into a widget ready area, there will be 
 
 = 1.0 =
 * Initial Release.
-
-== Upgrade Notice ==
-v1.3 adds an option to control if feeds links open in a new window.
