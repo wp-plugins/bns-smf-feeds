@@ -3,17 +3,19 @@
 Plugin Name: BNS SMF Feeds
 Plugin URI: http://buynowshop.com/plugins/bns-smf-feeds/
 Description: Plugin with multi-widget functionality that builds an SMF Forum RSS feed url by user option choices; and, displays a SMF forum feed.
-Version: 1.3.1.2
+Version: 1.4
 Author: Edward Caissie
 Author URI: http://edwardcaissie.com/
 License: GPL2
 */
 
-/*  Copyright 2009, 2010  Edward Caissie  (email : edward.caissie@gmail.com)
+/*  Copyright 2009-2010  Edward Caissie  (email : edward.caissie@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2, as
-    published by the Free Software Foundation.
+    it under the terms of the GNU General Public License version 2,
+    as published by the Free Software Foundation.
+
+    You may NOT assume that you can use any other version of the GPL.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,6 +25,9 @@ License: GPL2
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+    The license for this software can also likely be found here:
+    http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 global $wp_version;
@@ -297,7 +302,7 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 				'show_date'       => false,
 				'show_summary'    => false,
 				'blank_window'    => false,
-				'feed_refresh'    => '43200'  /* Default value as noted in feed.php core file */
+				'feed_refresh'    => '43200'  /* Default value as noted in feed.php core file = 12 hours */
         );
       $instance['number'] = $this->number;
     	$instance = wp_parse_args( (array) $instance, $defaults );

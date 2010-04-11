@@ -3,8 +3,8 @@ Contributors: cais
 Donate link: http://buynowshop.com
 Tags: RSS, SMF, Multiple Widgets, Option Panel
 Requires at least: 2.8
-Tested up to: 2.9.2
-Stable tag: 1.3.1.2
+Tested up to: 3.0
+Stable tag: 1.4
 
 Plugin with multi-widget functionality that builds an SMF Forum RSS feed url by user option choices; and, displays a SMF forum feed.
 
@@ -68,25 +68,34 @@ Once the widget is activated and placed into a widget ready area, there will be 
 1. The options panel.
 
 == Other Notes ==
-* Copyright 2009, 2010  Edward Caissie
+* Copyright 2009-2010  Edward Caissie  (email : edward.caissie@gmail.com)
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License, version 2, as
-published by the Free Software Foundation.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License version 2,
+  as published by the Free Software Foundation.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+  You may NOT assume that you can use any other version of the GPL.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+  The license for this software can also likely be found here:
+  http://www.gnu.org/licenses/gpl-2.0.html
 
 == Upgrade Notice ==
 Please stay current with your WordPress installation, your active theme, and your plugins.
 
 == Changelog ==
+= 1.4 =
+* compatible with WordPress version 3.0
+* updated license declaration
+
 = 1.3.1.2 =
 * compatible with WordPress version 2.9.2
 * updated license declaration
