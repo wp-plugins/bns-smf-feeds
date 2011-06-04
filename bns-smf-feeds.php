@@ -3,16 +3,16 @@
 Plugin Name: BNS SMF Feeds
 Plugin URI: http://buynowshop.com/plugins/bns-smf-feeds/
 Description: Plugin with multi-widget functionality that builds an SMF Forum RSS feed url by user option choices; and, displays a SMF forum feed.
-Version: 1.5.1
+Version: 1.6
 Author: Edward Caissie
 Author URI: http://edwardcaissie.com/
 License: GPL2
 License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 */
 
-/* Last Updated: December 12, 2010 v1.5.1 */
+/* Last Updated: June 4, 2011 v1.6 */
 
-/*  Copyright 2009-2010  Edward Caissie  (email : edward.caissie@gmail.com)
+/*  Copyright 2009-2011  Edward Caissie  (email : edward.caissie@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2,
@@ -170,88 +170,88 @@ function bns_wp_widget_rss_output( $rss, $args = array() ) {
 class BNS_SMF_Feeds_Widget extends WP_Widget {
   
 	function BNS_SMF_Feeds_Widget() {
-		/* Widget settings. */
+		  /* Widget settings. */
   		$widget_ops = array( 'classname' => 'bns-smf-feeds', 'description' => __( 'Displays recent feeds from a SMF Forum.' ) );
-		/* Widget control settings. */
-		$control_ops = array( 'width' => 450, 'height' => 200, 'id_base' => 'bns-smf-feeds' );
-		/* Create the widget. */
-		$this->WP_Widget( 'bns-smf-feeds', 'BNS SMF Feeds', $widget_ops, $control_ops );
+		  /* Widget control settings. */
+		  $control_ops = array( 'width' => 200, 'id_base' => 'bns-smf-feeds' );
+		  /* Create the widget. */
+		  $this->WP_Widget( 'bns-smf-feeds', 'BNS SMF Feeds', $widget_ops, $control_ops );
   	}
 	
 	function widget( $args, $instance ) {
-		global $blank_window;
-  		extract( $args );
-    		/* User-selected settings. */
-  		$title		= apply_filters( 'widget_title', $instance['title'] );
-		$smf_forum_url  = $instance['smf_forum_url'];
-		$smf_feed_type  = $instance['smf_feed_type'];
-		$smf_sub_action = $instance['smf_sub_action'];
-  		$smf_boards     = $instance['smf_boards'];
-  		$smf_categories = $instance['smf_categories'];
-  		$limit_count    = $instance['limit_count'];
-  		$show_author    = $instance['show_author'];
-  		$show_date      = $instance['show_date'];
-  		$show_summary   = $instance['show_summary'];
-  		$blank_window   = $instance['blank_window'];
-		$feed_refresh   = $instance['feed_refresh'];
-  		$smf_feed_url   = $instance['smf_feed_url'];
-		
-		if ( empty($smf_feed_url) ) {
-			$smf_feed_url  = '';
-			$smf_feed_url .= $smf_forum_url . "index.php?";
-			$smf_feed_url .= "type=" . $smf_feed_type . ";";
-			$smf_feed_url .= "action=.xml;";
-			if ( !$smf_sub_action ) {
-				$smf_feed_url .= "sa=news;"; /* sets feed to Recent Topics */
-			} else {
-				$smf_feed_url .= "sa=recent;"; /* sets feed to Recent Posts */
-			}
-			$smf_feed_url .= "board=" . $smf_boards . ";"; /* specify boards */
-			$smf_feed_url .= "c=" . $smf_categories . ";"; /* specify categories */
-			$smf_feed_url .= "limit=" . $limit_count;
-		}
-		
-		/* ---- taken from ../wp-includes/default-widgets.php ---- */
-  		while ( stristr( $smf_feed_url, 'http' ) != $smf_feed_url )
-  			$smf_feed_url = substr( $smf_feed_url, 1 );
-    		if ( empty( $smf_feed_url ) )
-  			return;
-    		$rss = bns_fetch_feed( $smf_feed_url );
-  		$title = $instance['title'];
-  		$desc = '';
-  		$link = '';  
-  		if ( ! is_wp_error( $rss ) ) {
-  			$desc = esc_attr( strip_tags( @html_entity_decode( $rss->get_description(), ENT_QUOTES, get_option( 'blog_charset' ) ) ) );
-  			if ( empty( $title ) )
-  				$title = esc_html( strip_tags( $rss->get_title() ) );
-  			$link = esc_url( strip_tags( $rss->get_permalink() ) );
-  			while ( stristr( $link, 'http' ) != $link )
-  				$link = substr( $link, 1 );
-  		}  
-  		if ( empty( $title ) )
-  			$title = empty( $desc ) ? __( 'Unknown Feed' ) : $desc;
-  		$title = apply_filters( 'widget_title', $title );
-  		$smf_feed_url = esc_url( strip_tags( $smf_feed_url ) );
-  		$icon = includes_url( 'images/rss.png' );
-  		if ( $title )
-  			$title = "<a class='bns-smf-feeds rsswidget' href='$smf_feed_url' " . ( !$blank_window ? "target=''" : "target='_blank'" ) . " title='" . esc_attr( __( 'Syndicate this content' ) ) ."'><img style='background:orange;color:white;border:none;' width='14' height='14' src='$icon' alt='RSS' /></a> <a class='bns-smf-feeds rsswidget' href='$link' " . ( !$blank_window ? "target=''" : "target='_blank'" ) . " title='$desc'>$title</a>";
-		/* ---- ... and the wheels on the bus go round and round ... ---- */
-		
-		/* Before widget (defined by themes). */
-  		echo $before_widget;
-		
-  		/* Title of widget (before and after defined by themes). */
-  		if ( $title )
-  			echo $before_title . $title . $after_title;
-			
-  		/* Display feed from widget settings. */
-		bns_wp_widget_rss_output( $smf_feed_url, array(
-							       'show_author'	=> ( ( $show_author ) ? 1 : 0 ),
-							       'show_date'	=> ( ( $show_date ) ? 1 : 0 ),
-							       'show_summary'	=> ( ( $show_summary ) ? 1 : 0 )
-							       ) );
-		/* After widget (defined by themes). */
-  		echo $after_widget;
+  		global $blank_window;
+    		extract( $args );
+      		/* User-selected settings. */
+    		$title		= apply_filters( 'widget_title', $instance['title'] );
+  		  $smf_forum_url  = $instance['smf_forum_url'];
+  		  $smf_feed_type  = $instance['smf_feed_type'];
+  		  $smf_sub_action = $instance['smf_sub_action'];
+    		$smf_boards     = $instance['smf_boards'];
+    		$smf_categories = $instance['smf_categories'];
+    		$limit_count    = $instance['limit_count'];
+    		$show_author    = $instance['show_author'];
+    		$show_date      = $instance['show_date'];
+    		$show_summary   = $instance['show_summary'];
+    		$blank_window   = $instance['blank_window'];
+  		  $feed_refresh   = $instance['feed_refresh'];
+    		$smf_feed_url   = $instance['smf_feed_url'];
+  		
+  		if ( empty($smf_feed_url) ) {
+  			$smf_feed_url  = '';
+  			$smf_feed_url .= $smf_forum_url . "index.php?";
+  			$smf_feed_url .= "type=" . $smf_feed_type . ";";
+  			$smf_feed_url .= "action=.xml;";
+  			if ( !$smf_sub_action ) {
+  				$smf_feed_url .= "sa=news;"; /* sets feed to Recent Topics */
+  			} else {
+  				$smf_feed_url .= "sa=recent;"; /* sets feed to Recent Posts */
+  			}
+  			$smf_feed_url .= "board=" . $smf_boards . ";"; /* specify boards */
+  			$smf_feed_url .= "c=" . $smf_categories . ";"; /* specify categories */
+  			$smf_feed_url .= "limit=" . $limit_count;
+  		}
+  		
+  		/* ---- taken from ../wp-includes/default-widgets.php ---- */
+    		while ( stristr( $smf_feed_url, 'http' ) != $smf_feed_url )
+    			$smf_feed_url = substr( $smf_feed_url, 1 );
+      		if ( empty( $smf_feed_url ) )
+    			return;
+      		$rss = bns_fetch_feed( $smf_feed_url );
+    		$title = $instance['title'];
+    		$desc = '';
+    		$link = '';  
+    		if ( ! is_wp_error( $rss ) ) {
+    			$desc = esc_attr( strip_tags( @html_entity_decode( $rss->get_description(), ENT_QUOTES, get_option( 'blog_charset' ) ) ) );
+    			if ( empty( $title ) )
+    				$title = esc_html( strip_tags( $rss->get_title() ) );
+    			$link = esc_url( strip_tags( $rss->get_permalink() ) );
+    			while ( stristr( $link, 'http' ) != $link )
+    				$link = substr( $link, 1 );
+    		}  
+    		if ( empty( $title ) )
+    			$title = empty( $desc ) ? __( 'Unknown Feed' ) : $desc;
+    		$title = apply_filters( 'widget_title', $title );
+    		$smf_feed_url = esc_url( strip_tags( $smf_feed_url ) );
+    		$icon = includes_url( 'images/rss.png' );
+    		if ( $title )
+    			$title = "<a class='bns-smf-feeds rsswidget' href='$smf_feed_url' " . ( !$blank_window ? "target=''" : "target='_blank'" ) . " title='" . esc_attr( __( 'Syndicate this content' ) ) ."'><img style='background:orange;color:white;border:none;' width='14' height='14' src='$icon' alt='RSS' /></a> <a class='bns-smf-feeds rsswidget' href='$link' " . ( !$blank_window ? "target=''" : "target='_blank'" ) . " title='$desc'>$title</a>";
+  		/* ---- ... and the wheels on the bus go round and round ... ---- */
+  		
+  		/* Before widget (defined by themes). */
+    		echo $before_widget;
+  		
+    		/* Title of widget (before and after defined by themes). */
+    		if ( $title )
+    			echo $before_title . $title . $after_title;
+  			
+    		/* Display feed from widget settings. */
+  		  bns_wp_widget_rss_output( $smf_feed_url, array(
+  							       'show_author'	=> ( ( $show_author ) ? 1 : 0 ),
+  							       'show_date'	=> ( ( $show_date ) ? 1 : 0 ),
+  							       'show_summary'	=> ( ( $show_summary ) ? 1 : 0 )
+  							       ) );
+  		/* After widget (defined by themes). */
+    		echo $after_widget;
 	}
   
 	function update( $new_instance, $old_instance ) {
@@ -259,14 +259,14 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 		
   		/* Strip tags (if needed) and update the widget settings. */
   		$instance['title']          = strip_tags( $new_instance['title'] );
-		$instance['smf_forum_url']  = $new_instance['smf_forum_url'];
-		$instance['smf_feed_type']  = $new_instance['smf_feed_type'];
-		$instance['smf_sub_action'] = $new_instance['smf_sub_action'];
+		  $instance['smf_forum_url']  = $new_instance['smf_forum_url'];
+		  $instance['smf_feed_type']  = $new_instance['smf_feed_type'];
+		  $instance['smf_sub_action'] = $new_instance['smf_sub_action'];
   		$instance['smf_boards']     = $new_instance['smf_boards'];
   		$instance['smf_categories'] = $new_instance['smf_categories'];
   		$instance['limit_count']    = $new_instance['limit_count'];
   		$instance['show_author']    = $new_instance['show_author'];
-		$instance['show_date']      = $new_instance['show_date'];
+		  $instance['show_date']      = $new_instance['show_date'];
   		$instance['show_summary']   = $new_instance['show_summary'];
   		$instance['blank_window']   = $new_instance['blank_window'];
   		$instance['feed_refresh']   = $new_instance['feed_refresh'];
@@ -276,103 +276,103 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
   	}
   
 	function form( $instance ) {
-		/* Set up some default widget settings. */
-		$defaults = array(
-				'title'           => __( 'SMF Forum Feed' ),
-				'smf_forum_url'   => '',
-				'smf_feed_type'   => 'rss2',  /* no reason ... just seems the most current format */
-				'smf_sub_action'  => false,   /* default to 'news' or recent Topics, check for 'recent' Posts */
-				'smf_boards'      => '',      /* defaults to all */
-				'smf_categories'  => '',      /* defaults to all */
-				'limit_count'     => '10',
-				'show_author'     => false,   /* Not currently supported by SMF feeds; future version? */
-				'show_date'       => false,
-				'show_summary'    => false,
-				'blank_window'    => false,
-				'feed_refresh'    => '43200'  /* Default value as noted in feed.php core file = 12 hours */
-				);
-		$instance['number'] = $this->number;
-		$instance = wp_parse_args( ( array ) $instance, $defaults );
-		?>
-		
-		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title (optional; if blank: defaults to feed title, if it exists):' ); ?></label>
-  			<input id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" value="<?php echo $instance['title']; ?>" style="width:100%;" />
-		</p>
-		
-		<p>
-			<label for="<?php echo $this->get_field_id( 'smf_forum_url' ); ?>"><?php _e( 'SMF Forum URL (e.g. http://www.simplemachines.org/community/):' ); ?></label>
-			<input id="<?php echo $this->get_field_id( 'smf_forum_url' ); ?>" name="<?php echo $this->get_field_name( 'smf_forum_url' ); ?>" value="<?php echo $instance['smf_forum_url']; ?>" style="width:100%;" />
-		</p>
-		
-		<p>
-			<label for="<?php echo $this->get_field_id( 'smf_feed_type' ); ?>"><?php _e( 'Feed Type:' ); ?></label>
-			<select id="<?php echo $this->get_field_id( 'smf_feed_type' ); ?>" name="<?php echo $this->get_field_name( 'smf_feed_type' ); ?>" class="widefat" style="width:100%;">
-				<option <?php if ( 'rss' == $instance['smf_feed_type'] ) echo 'selected="selected"'; ?>>rss</option>
-				<option <?php if ( 'rss2' == $instance['smf_feed_type'] ) echo 'selected="selected"'; ?>>rss2</option>
-				<option <?php if ( 'atom' == $instance['smf_feed_type'] ) echo 'selected="selected"'; ?>>atom</option>
-				<option <?php if ( 'rdf' == $instance['smf_feed_type'] ) echo 'selected="selected"'; ?>>rdf</option>
-			</select>
-		</p>
-		
-		<p>
-			<input class="checkbox" type="checkbox" <?php checked( ( bool ) $instance['smf_sub_action'], true ); ?> id="<?php echo $this->get_field_id( 'smf_sub_action' ); ?>" name="<?php echo $this->get_field_name( 'smf_sub_action' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'smf_sub_action' ); ?>"><?php _e( 'Display Recent Posts (default is Topics)?' ); ?></label>
-		</p>
-		
-		<p>
-			<label for="<?php echo $this->get_field_id( 'smf_boards' ); ?>"><?php _e( 'Specify Boards by ID (default is ALL):' ); ?></label>
-			<input id="<?php echo $this->get_field_id( 'smf_boards' ); ?>" name="<?php echo $this->get_field_name( 'smf_boards' ); ?>" value="<?php echo $instance['smf_boards']; ?>" style="width:100%;" />
-		</p>
-		
-		<p>
-			<label for="<?php echo $this->get_field_id( 'smf_categories' ); ?>"><?php _e( 'Specify Categories by ID (default is ALL):' ); ?></label>
-			<input id="<?php echo $this->get_field_id( 'smf_categories' ); ?>" name="<?php echo $this->get_field_name( 'smf_categories' ); ?>" value="<?php echo $instance['smf_categories']; ?>" style="width:100%;" />
-		</p>
-		
-		<p>
-			<label for="<?php echo $this->get_field_id( 'limit_count' ); ?>"><?php _e( 'Maximum items to display (affected by SMF permissions):' ); ?></label>
-			<input id="<?php echo $this->get_field_id( 'limit_count' ); ?>" name="<?php echo $this->get_field_name( 'limit_count' ); ?>" value="<?php echo $instance['limit_count']; ?>" style="width:100%;" />
-		</p>
-		
-		<table width="100%">
-			<tr>
-				<!-- Author details not apparently supported
-				<td>
-					<p>
-						<input class="checkbox" type="checkbox" <?php checked( ( bool ) $instance['show_author'], true ); ?> id="<?php echo $this->get_field_id( 'show_author' ); ?>" name="<?php echo $this->get_field_name( 'show_author' ); ?>" />
-						<label for="<?php echo $this->get_field_id( 'show_author' ); ?>"><?php _e( 'Display item author?' ); ?></label>
-					</p>
-				</td>-->
-				
-				<td>
-					<p>
-						<input class="checkbox" type="checkbox" <?php checked( ( bool ) $instance['show_date'], true ); ?> id="<?php echo $this->get_field_id( 'show_date' ); ?>" name="<?php echo $this->get_field_name( 'show_date' ); ?>" />
-						<label for="<?php echo $this->get_field_id( 'show_date' ); ?>"><?php _e( 'Display item date?' ); ?></label>
-					</p>
-				</td>
-				
-				<td>
-					<p>
-						<input class="checkbox" type="checkbox" <?php checked( ( bool ) $instance['show_summary'], true ); ?> id="<?php echo $this->get_field_id( 'show_summary' ); ?>" name="<?php echo $this->get_field_name( 'show_summary' ); ?>" />
-						<label for="<?php echo $this->get_field_id( 'show_summary' ); ?>"><?php _e( 'Show item summary?' ); ?></label>
-					</p>
-				</td>
-				
-				<td>
-					<p>
-						<input class="checkbox" type="checkbox" <?php checked( ( bool ) $instance['blank_window'], true ); ?> id="<?php echo $this->get_field_id( 'blank_window' ); ?>" name="<?php echo $this->get_field_name( 'blank_window' ); ?>" />
-						<label for="<?php echo $this->get_field_id( 'blank_window' ); ?>"><?php _e( 'Open in new window?' ); ?></label>
-					</p>
-				</td>
-			</tr>
-		</table>
-		
-		<p>
-			<label for="<?php echo $this->get_field_id( 'feed_refresh' ); ?>"><?php _e( 'Feed Refresh frequency (in seconds):' ); ?></label>
-			<input id="<?php echo $this->get_field_id( 'feed_refresh' ); ?>" name="<?php echo $this->get_field_name( 'feed_refresh' ); ?>" value="<?php echo $instance['feed_refresh']; ?>" style="width:100%;" />
-		</p>
-		<?php
-	}
+  		/* Set up some default widget settings. */
+  		$defaults = array(
+  				'title'           => __( 'SMF Forum Feed' ),
+  				'smf_forum_url'   => '',
+  				'smf_feed_type'   => 'rss2',  /* no reason ... just seems the most current format */
+  				'smf_sub_action'  => false,   /* default to 'news' or recent Topics, check for 'recent' Posts */
+  				'smf_boards'      => '',      /* defaults to all */
+  				'smf_categories'  => '',      /* defaults to all */
+  				'limit_count'     => '10',
+  				'show_author'     => false,   /* Not currently supported by SMF feeds; future version? */
+  				'show_date'       => false,
+  				'show_summary'    => false,
+  				'blank_window'    => false,
+  				'feed_refresh'    => '43200'  /* Default value as noted in feed.php core file = 12 hours */
+  				);
+  		$instance['number'] = $this->number;
+  		$instance = wp_parse_args( ( array ) $instance, $defaults );
+  		?>
+  		
+  		<p>
+  			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title (optional; if blank: defaults to feed title, if it exists):' ); ?></label>
+    			<input id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" value="<?php echo $instance['title']; ?>" style="width:100%;" />
+  		</p>
+  		
+  		<p>
+  			<label for="<?php echo $this->get_field_id( 'smf_forum_url' ); ?>"><?php _e( 'SMF Forum URL (e.g. http://www.simplemachines.org/community/):' ); ?></label>
+  			<input id="<?php echo $this->get_field_id( 'smf_forum_url' ); ?>" name="<?php echo $this->get_field_name( 'smf_forum_url' ); ?>" value="<?php echo $instance['smf_forum_url']; ?>" style="width:100%;" />
+  		</p>
+  		
+  		<p>
+  			<label for="<?php echo $this->get_field_id( 'smf_feed_type' ); ?>"><?php _e( 'Feed Type:' ); ?></label>
+  			<select id="<?php echo $this->get_field_id( 'smf_feed_type' ); ?>" name="<?php echo $this->get_field_name( 'smf_feed_type' ); ?>" class="widefat" style="width:100%;">
+  				<option <?php selected( 'rss', $instance['smf_feed_type'], true ); ?>>rss</option>
+  				<option <?php selected( 'rss2', $instance['smf_feed_type'], true ); ?>>rss2</option>
+  				<option <?php selected( 'atom', $instance['smf_feed_type'], true ); ?>>atom</option>
+  				<option <?php selected( 'rdf', $instance['smf_feed_type'], true ); ?>>rdf</option>
+  			</select>
+  		</p>
+  		
+  		<p>
+  			<input class="checkbox" type="checkbox" <?php checked( ( bool ) $instance['smf_sub_action'], true ); ?> id="<?php echo $this->get_field_id( 'smf_sub_action' ); ?>" name="<?php echo $this->get_field_name( 'smf_sub_action' ); ?>" />
+  			<label for="<?php echo $this->get_field_id( 'smf_sub_action' ); ?>"><?php _e( 'Display Recent Posts (default is Topics)?' ); ?></label>
+  		</p>
+  		
+  		<p>
+  			<label for="<?php echo $this->get_field_id( 'smf_boards' ); ?>"><?php _e( 'Specify Boards by ID (default is ALL):' ); ?></label>
+  			<input id="<?php echo $this->get_field_id( 'smf_boards' ); ?>" name="<?php echo $this->get_field_name( 'smf_boards' ); ?>" value="<?php echo $instance['smf_boards']; ?>" style="width:100%;" />
+  		</p>
+  		
+  		<p>
+  			<label for="<?php echo $this->get_field_id( 'smf_categories' ); ?>"><?php _e( 'Specify Categories by ID (default is ALL):' ); ?></label>
+  			<input id="<?php echo $this->get_field_id( 'smf_categories' ); ?>" name="<?php echo $this->get_field_name( 'smf_categories' ); ?>" value="<?php echo $instance['smf_categories']; ?>" style="width:100%;" />
+  		</p>
+  		
+  		<p>
+  			<label for="<?php echo $this->get_field_id( 'limit_count' ); ?>"><?php _e( 'Maximum items to display (affected by SMF permissions):' ); ?></label>
+  			<input id="<?php echo $this->get_field_id( 'limit_count' ); ?>" name="<?php echo $this->get_field_name( 'limit_count' ); ?>" value="<?php echo $instance['limit_count']; ?>" style="width:100%;" />
+  		</p>
+  		
+  		<table width="100%">
+  			<tr>
+  				<!-- Author details not apparently supported
+  				<td>
+  					<p>
+  						<input class="checkbox" type="checkbox" <?php checked( ( bool ) $instance['show_author'], true ); ?> id="<?php echo $this->get_field_id( 'show_author' ); ?>" name="<?php echo $this->get_field_name( 'show_author' ); ?>" />
+  						<label for="<?php echo $this->get_field_id( 'show_author' ); ?>"><?php _e( 'Display item author?' ); ?></label>
+  					</p>
+  				</td>-->
+  				
+  				<td>
+  					<p>
+  						<input class="checkbox" type="checkbox" <?php checked( ( bool ) $instance['show_date'], true ); ?> id="<?php echo $this->get_field_id( 'show_date' ); ?>" name="<?php echo $this->get_field_name( 'show_date' ); ?>" />
+  						<label for="<?php echo $this->get_field_id( 'show_date' ); ?>"><?php _e( 'Display item date?' ); ?></label>
+  					</p>
+  				</td>
+  				
+  				<td>
+  					<p>
+  						<input class="checkbox" type="checkbox" <?php checked( ( bool ) $instance['show_summary'], true ); ?> id="<?php echo $this->get_field_id( 'show_summary' ); ?>" name="<?php echo $this->get_field_name( 'show_summary' ); ?>" />
+  						<label for="<?php echo $this->get_field_id( 'show_summary' ); ?>"><?php _e( 'Show item summary?' ); ?></label>
+  					</p>
+  				</td>
+  				
+  				<td>
+  					<p>
+  						<input class="checkbox" type="checkbox" <?php checked( ( bool ) $instance['blank_window'], true ); ?> id="<?php echo $this->get_field_id( 'blank_window' ); ?>" name="<?php echo $this->get_field_name( 'blank_window' ); ?>" />
+  						<label for="<?php echo $this->get_field_id( 'blank_window' ); ?>"><?php _e( 'Open in new window?' ); ?></label>
+  					</p>
+  				</td>
+  			</tr>
+  		</table>
+  		
+  		<p>
+  			<label for="<?php echo $this->get_field_id( 'feed_refresh' ); ?>"><?php _e( 'Feed Refresh frequency (in seconds):' ); ?></label>
+  			<input id="<?php echo $this->get_field_id( 'feed_refresh' ); ?>" name="<?php echo $this->get_field_name( 'feed_refresh' ); ?>" value="<?php echo $instance['feed_refresh']; ?>" style="width:100%;" />
+  		</p>
+  		<?php
+  	}
 }
 ?>

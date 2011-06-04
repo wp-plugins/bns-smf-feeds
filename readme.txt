@@ -3,8 +3,8 @@ Contributors: cais
 Donate link: http://buynowshop.com
 Tags: RSS, SMF, Multiple Widgets, Option Panel
 Requires at least: 2.8
-Tested up to: 3.1
-Stable tag: 1.5.1
+Tested up to: 3.2
+Stable tag: 1.6
 
 Plugin with multi-widget functionality that builds an SMF Forum RSS feed url by user option choices; and, displays a SMF forum feed.
 
@@ -54,6 +54,8 @@ This section describes how to install the plugin and get it working.
 Reading this article for further assistance: http://wpfirstaid.com/2009/12/plugin-installation/
 
 == Frequently Asked Questions ==
+= How can I get support for this plugin? =
+Please note, support may be available on the WordPress Support forums; but, it may be faster to visit http://buynowshop.com/plugins/bns-smf-feeds/ and leave a comment with the issue you are experiencing.
 
 = Can I use this in more than one widget area? =
 Yes, this plugin has been made for multi-widget compatibility. Each instance of the widget will display, if wanted, differently than every other instance of the widget.
@@ -68,7 +70,7 @@ Once the widget is activated and placed into a widget ready area, there will be 
 1. The options panel.
 
 == Other Notes ==
-* Copyright 2009-2010  Edward Caissie  (email : edward.caissie@gmail.com)
+* Copyright 2009-2011  Edward Caissie  (email : edward.caissie@gmail.com)
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License version 2,
@@ -92,6 +94,12 @@ Once the widget is activated and placed into a widget ready area, there will be 
 Please stay current with your WordPress installation, your active theme, and your plugins.
 
 == Changelog ==
+= 1.6 =
+* released June 2011
+* confirmed compatible with WordPress version 3.2-beta2-18085
+* re-sized options panel
+* updated screenshot to show new size (and layout) of options panel 
+
 = 1.5.1 =
 * released December 11, 2010
 * Confirm compatible with WordPress 3.1 (beta)
