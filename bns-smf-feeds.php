@@ -3,7 +3,7 @@
 Plugin Name: BNS SMF Feeds
 Plugin URI: http://buynowshop.com/plugins/bns-smf-feeds/
 Description: Plugin with multi-widget functionality that builds an SMF Forum RSS feed url by user option choices; and, displays a SMF forum feed.
-Version: 1.7.1
+Version: 1.7.2
 Text Domain: bns-smf
 Author: Edward Caissie
 Author URI: http://edwardcaissie.com/
@@ -21,9 +21,9 @@ License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * @link        http://buynowshop.com/plugins/bns-smf-feeds/
  * @link        https://github.com/Cais/bns-smf-feeds/
  * @link        http://wordpress.org/extend/plugins/bns-smf-feeds/
- * @version     1.7.1
+ * @version     1.7.2
  * @author      Edward Caissie <edward.caissie@gmail.com>
- * @copyright   Copyright (c) 2009-2011, Edward Caissie
+ * @copyright   Copyright (c) 2009-2012, Edward Caissie
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License version 2, as published by the
@@ -45,8 +45,9 @@ License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * The license for this software can also likely be found here:
  * http://www.gnu.org/licenses/gpl-2.0.html
  *
- * Last revised November 23, 2011
- * Add PHPDoc style documentation
+ * Last revised February 20, 2012
+ * @todo Review possible issues with cross-browser compatibility - see http://buynowshop.com/plugins/bns-smf-feeds/comment-page-1/#comment-11934
+ * @todo Review if SMF feed offers a "select distinct" option for the feed ... ?
  */
 
 /**
@@ -162,15 +163,19 @@ function bns_wp_widget_rss_output( $rss, $args = array() ) {
 
         echo '<ul class="bns-smf-feeds">';
         foreach ( $rss->get_items( 0, $limit_count ) as $item ) {
+
             /** @noinspection PhpUndefinedMethodInspection */
             $link = $item->get_link();
             while ( stristr( $link, 'http' ) != $link )
                 $link = substr( $link, 1 );
             $link = esc_url( strip_tags( $link ) );
+
+            /** @noinspection PhpUndefinedMethodInspection */
             $title = esc_attr( strip_tags( $item->get_title() ) );
             if ( empty( $title ) )
                 $title = __( 'Untitled', 'bns-smf' );
 
+            /** @noinspection PhpUndefinedMethodInspection */
             $desc = str_replace( array( "\n", "\r" ), ' ', esc_attr( strip_tags( @html_entity_decode( $item->get_description(), ENT_QUOTES, get_option( 'blog_charset' ) ) ) ) );
             $desc = wp_html_excerpt( $desc, 360 );
             $desc = esc_html( $desc );
