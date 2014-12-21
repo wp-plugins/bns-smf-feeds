@@ -3,7 +3,7 @@
 Plugin Name: BNS SMF Feeds
 Plugin URI: http://buynowshop.com/plugins/bns-smf-feeds/
 Description: Plugin with multi-widget functionality that builds an SMF Forum RSS feed url by user option choices; and, displays a SMF forum feed.
-Version: 1.9.4
+Version: 2.0
 Text Domain: bns-smf
 Author: Edward Caissie
 Author URI: http://edwardcaissie.com/
@@ -21,7 +21,7 @@ License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * @link        http://buynowshop.com/plugins/bns-smf-feeds/
  * @link        https://github.com/Cais/bns-smf-feeds/
  * @link        http://wordpress.org/extend/plugins/bns-smf-feeds/
- * @version     1.9.4
+ * @version     2.0
  * @author      Edward Caissie <edward.caissie@gmail.com>
  * @copyright   Copyright (c) 2009-2014, Edward Caissie
  *
@@ -44,14 +44,32 @@ License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  *
  * The license for this software can also likely be found here:
  * http://www.gnu.org/licenses/gpl-2.0.html
- *
- * @version     1.9.3
- * @date        November 2013
- *
- * @version     1.9.4
- * @date        May 2014
  */
 class BNS_SMF_Feeds_Widget extends WP_Widget {
+
+	private static $instance = false;
+
+	/**
+	 * Get Instance
+	 *
+	 * @since   2.0
+	 *
+	 * @return BNS_SMF_Feeds_Widget|bool
+	 */
+	public static function get_instance() {
+
+		if ( ! self::$instance ) {
+
+			self::$instance = new self();
+
+		}
+
+		/** End if - instance exists */
+
+		return self::$instance;
+
+	} /** End functions - get instance */
+
 
 	/**
 	 * Constructor
@@ -59,12 +77,16 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 	 * @package         BNS_SMF_Feeds
 	 * @since           1.0
 	 *
-	 * @uses    (class) WP_Widget
+	 * @uses            BNS_SMF_Feeds_Widget::WP_Widget (factory)
 	 * @uses            __
 	 * @uses            add_action
 	 * @uses            add_shortcode
+	 *
+	 * @version         2.0
+	 * @date            December 21, 2014
+	 * Changed function name from `BNS_SMF_Feed_Widget` to the default `__construct` method name
 	 */
-	function BNS_SMF_Feeds_Widget() {
+	function __construct() {
 		/**
 		 * Check installed WordPress version for compatibility
 		 *
@@ -107,7 +129,7 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 			)
 		);
 
-	}
+	} /** End function - constructor */
 
 
 	/**
@@ -115,22 +137,33 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 	 *
 	 * @package BNS_SMF_Feeds
 	 *
+	 * @uses    BNS_SMF_Feeds_Widget::bns_fetch_feed
+	 * @uses    BNS_SMF_Feeds_Widget::bns_wp_widget_rss_output
+	 * @uses    __
 	 * @uses    apply_filters
 	 * @uses    esc_attr
+	 * @uses    esc_attr__
 	 * @uses    esc_html
 	 * @uses    esc_url
 	 * @uses    get_description
+	 * @uses    get_link
 	 * @uses    get_option
-	 * @uses    get_permalink
 	 * @uses    get_title
 	 * @uses    includes_url
 	 * @uses    is_wp_error
 	 *
 	 * @param   array $args
 	 * @param   array $instance
+	 *
+	 * @version 2.0
+	 * @date    December 21, 2014
+	 * Replaced (internal) `get_permalink` with `get_link`
+	 * Optimized `esc_attr( __() )` to `esc_attr__()`
 	 */
 	function widget( $args, $instance ) {
+
 		global $blank_window;
+
 		extract( $args );
 		/** User-selected settings */
 		$title          = apply_filters( 'widget_title', $instance['title'] );
@@ -153,17 +186,21 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 			$smf_feed_url .= "type=" . $smf_feed_type . ";";
 			$smf_feed_url .= "action=.xml;";
 			if ( ! $smf_sub_action ) {
-				$smf_feed_url .= "sa=news;"; /* sets feed to Recent Topics */
+				$smf_feed_url .= "sa=news;";
+				/** sets feed to Recent Topics */
 			} else {
-				$smf_feed_url .= "sa=recent;"; /* sets feed to Recent Posts */
+				$smf_feed_url .= "sa=recent;";
+				/** sets feed to Recent Posts */
 			}
-			$smf_feed_url .= "board=" . $smf_boards . ";"; /* specify boards */
-			$smf_feed_url .= "c=" . $smf_categories . ";"; /* specify categories */
+			$smf_feed_url .= "board=" . $smf_boards . ";";
+			/** specify boards */
+			$smf_feed_url .= "c=" . $smf_categories . ";";
+			/** specify categories */
 			$smf_feed_url .= "limit=" . $limit_count;
 		}
 		/** End if - empty smf feed url */
 
-		/* ---- taken from ../wp-includes/default-widgets.php ---- */
+		/** ---- taken from ../wp-includes/default-widgets.php ---- */
 		while ( stristr( $smf_feed_url, 'http' ) != $smf_feed_url ) {
 			$smf_feed_url = substr( $smf_feed_url, 1 );
 		}
@@ -184,7 +221,7 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 			}
 			/** End if - empty title */
 
-			$link = esc_url( strip_tags( $rss->get_permalink() ) );
+			$link = esc_url( strip_tags( $rss->get_link() ) );
 
 			while ( stristr( $link, 'http' ) != $link ) {
 				$link = substr( $link, 1 );
@@ -206,7 +243,7 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 		$icon         = includes_url( 'images/rss.png' );
 
 		if ( $title ) {
-			$title = "<a class='bns-smf-feeds rsswidget' href='$smf_feed_url' " . ( ! $blank_window ? "target=''" : "target='_blank'" ) . " title='" . esc_attr( __( 'Syndicate this content', 'bns-smf' ) ) . "'><img style='background:orange;color:white;border:none;' width='14' height='14' src='$icon' alt='RSS' /></a> <a class='bns-smf-feeds rsswidget' href='$link' " . ( ! $blank_window ? "target=''" : "target='_blank'" ) . " title='$desc'>$title</a>";
+			$title = "<a class='bns-smf-feeds rsswidget' href='$smf_feed_url' " . ( ! $blank_window ? "target=''" : "target='_blank'" ) . " title='" . esc_attr__( 'Syndicate this content', 'bns-smf' ) . "'><img style='background:orange;color:white;border:none;' width='14' height='14' src='$icon' alt='RSS' /></a> <a class='bns-smf-feeds rsswidget' href='$link' " . ( ! $blank_window ? "target=''" : "target='_blank'" ) . " title='$desc'>$title</a>";
 		}
 		/** End if - title */
 		/* ---- ... and the wheels on the bus go round and round ... ---- */
@@ -222,14 +259,18 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 		}
 		/** End if - title */
 
+		echo '<div class="bns-smf-feeds-content">';
+
 		/** Display feed from widget settings */
 		$this->bns_wp_widget_rss_output(
-			 $smf_feed_url, $feed_refresh, array(
-					 'show_author'  => ( ( $show_author ) ? 1 : 0 ),
-					 'show_date'    => ( ( $show_date ) ? 1 : 0 ),
-					 'show_summary' => ( ( $show_summary ) ? 1 : 0 )
-				 )
+			$smf_feed_url, $feed_refresh, array(
+				'show_author'  => ( ( $show_author ) ? 1 : 0 ),
+				'show_date'    => ( ( $show_date ) ? 1 : 0 ),
+				'show_summary' => ( ( $show_summary ) ? 1 : 0 )
+			)
 		);
+
+		echo '</div><!-- .bns-smf-feeds-content -->';
 
 		/** @var $after_widget string - defined by theme */
 		echo $after_widget;
@@ -276,11 +317,11 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 	 * @package    BNS_SMF_Feeds
 	 * @since      1.0
 	 *
+	 * @uses       BNS_SMF_Feeds_Widget::get_field_id
+	 * @uses       BNS_SMF_Feeds_Widget::get_field_name
 	 * @uses       __
 	 * @uses       _e
 	 * @uses       checked
-	 * @uses       get_field_id
-	 * @uses       get_field_name
 	 * @uses       selected
 	 * @uses       wp_parse_args
 	 *
@@ -299,19 +340,19 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 			'smf_forum_url'  => '',
 			'smf_feed_type'  => 'rss2',
 			'smf_sub_action' => false,
-			// default to 'news' or recent Topics, check for 'recent' Posts
+			/** default to 'news' or recent Topics, check for 'recent' Posts */
 			'smf_boards'     => '',
-			// defaults to all
+			/** defaults to all */
 			'smf_categories' => '',
-			// defaults to all
+			/** defaults to all */
 			'limit_count'    => '10',
 			'show_author'    => false,
-			// Not currently supported by SMF feeds; future version?
+			/** Not currently supported by SMF feeds; future version? */
 			'show_date'      => false,
 			'show_summary'   => false,
 			'blank_window'   => false,
 			'feed_refresh'   => '43200'
-			// Default value as noted in feed.php core file = 12 hours
+			/** Default value as noted in feed.php core file = 12 hours */
 		);
 		$instance['number'] = $this->number;
 		$instance           = wp_parse_args( ( array ) $instance, $defaults ); ?>
@@ -320,26 +361,26 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 			<label
 				for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title (optional; if blank: defaults to feed title, if it exists):', 'bns-smf' ); ?></label>
 			<input id="<?php echo $this->get_field_id( 'title' ); ?>"
-				   name="<?php echo $this->get_field_name( 'title' ); ?>"
-				   value="<?php echo $instance['title']; ?>"
-				   style="width:100%;" />
+			       name="<?php echo $this->get_field_name( 'title' ); ?>"
+			       value="<?php echo $instance['title']; ?>"
+			       style="width:100%;" />
 		</p>
 
 		<p>
 			<label
 				for="<?php echo $this->get_field_id( 'smf_forum_url' ); ?>"><?php _e( 'SMF Forum URL (e.g. http://www.simplemachines.org/community/):', 'bns-smf' ); ?></label>
 			<input id="<?php echo $this->get_field_id( 'smf_forum_url' ); ?>"
-				   name="<?php echo $this->get_field_name( 'smf_forum_url' ); ?>"
-				   value="<?php echo $instance['smf_forum_url']; ?>"
-				   style="width:100%;" />
+			       name="<?php echo $this->get_field_name( 'smf_forum_url' ); ?>"
+			       value="<?php echo $instance['smf_forum_url']; ?>"
+			       style="width:100%;" />
 		</p>
 
 		<p>
 			<label
 				for="<?php echo $this->get_field_id( 'smf_feed_type' ); ?>"><?php _e( 'Feed Type:', 'bns-smf' ); ?></label>
 			<select id="<?php echo $this->get_field_id( 'smf_feed_type' ); ?>"
-					name="<?php echo $this->get_field_name( 'smf_feed_type' ); ?>"
-					class="widefat" style="width:100%;">
+			        name="<?php echo $this->get_field_name( 'smf_feed_type' ); ?>"
+			        class="widefat" style="width:100%;">
 				<option value="rss" <?php selected( 'rss', $instance['smf_feed_type'], true ); ?>>
 					<?php _e( 'RSS', 'bns-smf' ); ?>
 				</option>
@@ -357,9 +398,9 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 
 		<p>
 			<input class="checkbox"
-				   type="checkbox" <?php checked( ( bool ) $instance['smf_sub_action'], true ); ?>
-				   id="<?php echo $this->get_field_id( 'smf_sub_action' ); ?>"
-				   name="<?php echo $this->get_field_name( 'smf_sub_action' ); ?>" />
+			       type="checkbox" <?php checked( ( bool ) $instance['smf_sub_action'], true ); ?>
+			       id="<?php echo $this->get_field_id( 'smf_sub_action' ); ?>"
+			       name="<?php echo $this->get_field_name( 'smf_sub_action' ); ?>" />
 			<label
 				for="<?php echo $this->get_field_id( 'smf_sub_action' ); ?>"><?php _e( 'Display Recent Posts (default is Topics)?', 'bns-smf' ); ?></label>
 		</p>
@@ -368,27 +409,27 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 			<label
 				for="<?php echo $this->get_field_id( 'smf_boards' ); ?>"><?php _e( 'Specify Boards separated by commas by ID (default is ALL):', 'bns-smf' ); ?></label>
 			<input id="<?php echo $this->get_field_id( 'smf_boards' ); ?>"
-				   name="<?php echo $this->get_field_name( 'smf_boards' ); ?>"
-				   value="<?php echo $instance['smf_boards']; ?>"
-				   style="width:100%;" />
+			       name="<?php echo $this->get_field_name( 'smf_boards' ); ?>"
+			       value="<?php echo $instance['smf_boards']; ?>"
+			       style="width:100%;" />
 		</p>
 
 		<p>
 			<label
 				for="<?php echo $this->get_field_id( 'smf_categories' ); ?>"><?php _e( 'Specify Categories separated by commas by ID (default is ALL):', 'bns-smf' ); ?></label>
 			<input id="<?php echo $this->get_field_id( 'smf_categories' ); ?>"
-				   name="<?php echo $this->get_field_name( 'smf_categories' ); ?>"
-				   value="<?php echo $instance['smf_categories']; ?>"
-				   style="width:100%;" />
+			       name="<?php echo $this->get_field_name( 'smf_categories' ); ?>"
+			       value="<?php echo $instance['smf_categories']; ?>"
+			       style="width:100%;" />
 		</p>
 
 		<p>
 			<label
 				for="<?php echo $this->get_field_id( 'limit_count' ); ?>"><?php _e( 'Maximum items to display (affected by SMF permissions):', 'bns-smf' ); ?></label>
 			<input id="<?php echo $this->get_field_id( 'limit_count' ); ?>"
-				   name="<?php echo $this->get_field_name( 'limit_count' ); ?>"
-				   value="<?php echo $instance['limit_count']; ?>"
-				   style="width:100%;" />
+			       name="<?php echo $this->get_field_name( 'limit_count' ); ?>"
+			       value="<?php echo $instance['limit_count']; ?>"
+			       style="width:100%;" />
 		</p>
 
 		<table width="100%">
@@ -396,9 +437,9 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 				<td>
 					<p>
 						<input class="checkbox"
-							   type="checkbox" <?php checked( ( bool ) $instance['show_date'], true ); ?>
-							   id="<?php echo $this->get_field_id( 'show_date' ); ?>"
-							   name="<?php echo $this->get_field_name( 'show_date' ); ?>" />
+						       type="checkbox" <?php checked( ( bool ) $instance['show_date'], true ); ?>
+						       id="<?php echo $this->get_field_id( 'show_date' ); ?>"
+						       name="<?php echo $this->get_field_name( 'show_date' ); ?>" />
 						<label
 							for="<?php echo $this->get_field_id( 'show_date' ); ?>"><?php _e( 'Display item date?', 'bns-smf' ); ?></label>
 					</p>
@@ -406,9 +447,9 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 				<td>
 					<p>
 						<input class="checkbox"
-							   type="checkbox" <?php checked( ( bool ) $instance['show_summary'], true ); ?>
-							   id="<?php echo $this->get_field_id( 'show_summary' ); ?>"
-							   name="<?php echo $this->get_field_name( 'show_summary' ); ?>" />
+						       type="checkbox" <?php checked( ( bool ) $instance['show_summary'], true ); ?>
+						       id="<?php echo $this->get_field_id( 'show_summary' ); ?>"
+						       name="<?php echo $this->get_field_name( 'show_summary' ); ?>" />
 						<label
 							for="<?php echo $this->get_field_id( 'show_summary' ); ?>"><?php _e( 'Show item summary?', 'bns-smf' ); ?></label>
 					</p>
@@ -418,9 +459,9 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 				<td>
 					<p>
 						<input class="checkbox"
-							   type="checkbox" <?php checked( ( bool ) $instance['blank_window'], true ); ?>
-							   id="<?php echo $this->get_field_id( 'blank_window' ); ?>"
-							   name="<?php echo $this->get_field_name( 'blank_window' ); ?>" />
+						       type="checkbox" <?php checked( ( bool ) $instance['blank_window'], true ); ?>
+						       id="<?php echo $this->get_field_id( 'blank_window' ); ?>"
+						       name="<?php echo $this->get_field_name( 'blank_window' ); ?>" />
 						<label
 							for="<?php echo $this->get_field_id( 'blank_window' ); ?>"><?php _e( 'Open in new window?', 'bns-smf' ); ?></label>
 					</p>
@@ -432,9 +473,9 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 			<label
 				for="<?php echo $this->get_field_id( 'feed_refresh' ); ?>"><?php _e( 'Feed Refresh frequency (in seconds):', 'bns-smf' ); ?></label>
 			<input id="<?php echo $this->get_field_id( 'feed_refresh' ); ?>"
-				   name="<?php echo $this->get_field_name( 'feed_refresh' ); ?>"
-				   value="<?php echo $instance['feed_refresh']; ?>"
-				   style="width:100%;" />
+			       name="<?php echo $this->get_field_name( 'feed_refresh' ); ?>"
+			       value="<?php echo $instance['feed_refresh']; ?>"
+			       style="width:100%;" />
 		</p>
 
 	<?php
@@ -451,8 +492,16 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 	 * @package    WordPress
 	 * @since      2.8
 	 *
+	 * @uses       SimplePie::error
+	 * @uses       SimplePie::handle_content_type
+	 * @uses       SimplePie::init
+	 * @uses       SimplePie::set_feed_url
+	 * @uses       SimplePie::set_file_class
+	 * @uses       SimplePie::set_cache_class
+	 * @uses       SimplePie::set_cache_duration
+	 *
 	 * @param   string $url URL to retrieve feed
-	 * @param    int   $feed_refresh
+	 * @param   int    $feed_refresh
 	 *
 	 * @return  WP_Error|SimplePie WP_Error object on failure or SimplePie object on success
 	 *
@@ -461,7 +510,10 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 	 * Added $feed_fresh parameter to take it out of the global realm
 	 */
 	function bns_fetch_feed( $url, $feed_refresh ) {
+
 		require_once( ABSPATH . WPINC . '/class-feed.php' );
+
+		/** @var object $feed - create new SimplePie instance */
 		$feed = new SimplePie();
 		$feed->set_feed_url( $url );
 		$feed->set_cache_class( 'WP_Feed_Cache' );
@@ -488,6 +540,14 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 	 * @package    WordPress
 	 * @since      2.5.0
 	 *
+	 * @uses       BNS_SMF_Feed_Widget::bns_fetch_feed
+	 * @uses       __
+	 * @uses       current_user_can
+	 * @uses       is_admin
+	 * @uses       is_wp_error
+	 * @uses       wp_html_excerpt
+	 * @uses       wp_parse_args
+	 *
 	 * @param         $rss
 	 * @param         $feed_refresh
 	 * @param   array $args
@@ -499,6 +559,7 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 	 * Added $feed_fresh parameter to take it out of the global realm
 	 */
 	function bns_wp_widget_rss_output( $rss, $feed_refresh, $args = array() ) {
+
 		global $blank_window, $limit_count;
 
 		if ( is_string( $rss ) ) {
@@ -736,6 +797,124 @@ class BNS_SMF_Feeds_Widget extends WP_Widget {
 
 /** End class BNS_SMF_Feeds_Widget */
 
+/** @var $bnssmf - instantiate the class as a singleton */
+$bnssmf = BNS_SMF_Feeds_Widget::get_instance();
 
-/** @var $bnssmf - instantiate the class */
-$bnssmf = new BNS_SMF_Feeds_Widget();
+
+/**
+ * BNS SMF Feeds In Plugin Update Message
+ *
+ * @package BNS_SMF_Feeds
+ * @since   2.0
+ *
+ * @uses    get_transient
+ * @uses    is_wp_error
+ * @uses    set_transient
+ * @uses    wp_kses_post
+ * @uses    wp_remote_get
+ *
+ * @param $args
+ */
+function BNS_SMF_Feeds_in_plugin_update_message( $args ) {
+
+	require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+	$bnssmf_data = get_plugin_data( __FILE__ );
+
+	$transient_name = 'bnssmf_upgrade_notice_' . $args['Version'];
+	if ( false === ( $upgrade_notice = get_transient( $transient_name ) ) ) {
+
+		/** @var string $response - get the readme.txt file from WordPress */
+		$response = wp_remote_get( 'https://plugins.svn.wordpress.org/bns-smf-feeds/trunk/readme.txt' );
+
+		if ( ! is_wp_error( $response ) && ! empty( $response['body'] ) ) {
+			$matches = null;
+		}
+		$regexp         = '~==\s*Changelog\s*==\s*=\s*(.*)\s*=(.*)(=\s*' . preg_quote( $bnssmf_data['Version'] ) . '\s*=|$)~Uis';
+		$upgrade_notice = '';
+
+		if ( preg_match( $regexp, $response['body'], $matches ) ) {
+			$version = trim( $matches[1] );
+			$notices = (array) preg_split( '~[\r\n]+~', trim( $matches[2] ) );
+
+			if ( version_compare( $bnssmf_data['Version'], $version, '<' ) ) {
+
+				/** @var string $upgrade_notice - start building message (inline styles) */
+				$upgrade_notice = '<style type="text/css">
+							.bnssmf_plugin_upgrade_notice { padding-top: 20px; }
+							.bnssmf_plugin_upgrade_notice ul { width: 50%; list-style: disc; margin-left: 20px; margin-top: 0; }
+							.bnssmf_plugin_upgrade_notice li { margin: 0; }
+						</style>';
+
+				/** @var string $upgrade_notice - start building message (begin block) */
+				$upgrade_notice .= '<div class="bnssmf_plugin_upgrade_notice">';
+
+				$ul = false;
+
+				foreach ( $notices as $index => $line ) {
+
+					if ( preg_match( '~^=\s*(.*)\s*=$~i', $line ) ) {
+
+						if ( $ul ) {
+							$upgrade_notice .= '</ul><div style="clear: left;"></div>';
+						}
+						/** End if - unordered list created */
+
+						$upgrade_notice .= '<hr/>';
+
+					}
+					/** End if - non-blank line */
+
+					/** @var string $return_value - body of message */
+					$return_value = '';
+
+					if ( preg_match( '~^\s*\*\s*~', $line ) ) {
+
+						if ( ! $ul ) {
+							$return_value = '<ul">';
+							$ul           = true;
+						}
+						/** End if - unordered list not started */
+
+						$line = preg_replace( '~^\s*\*\s*~', '', htmlspecialchars( $line ) );
+						$return_value .= '<li style=" ' . ( $index % 2 == 0 ? 'clear: left;' : '' ) . '">' . $line . '</li>';
+
+					} else {
+
+						if ( $ul ) {
+							$return_value = '</ul><div style="clear: left;"></div>';
+							$return_value .= '<p>' . $line . '</p>';
+							$ul = false;
+						} else {
+							$return_value .= '<p>' . $line . '</p>';
+						}
+						/** End if - unordered list started */
+
+					}
+					/** End if - non-blank line */
+
+					$upgrade_notice .= wp_kses_post( preg_replace( '~\[([^\]]*)\]\(([^\)]*)\)~', '<a href="${2}">${1}</a>', $return_value ) );
+
+				}
+				/** End foreach - line parsing */
+
+				$upgrade_notice .= '</div>';
+
+			}
+			/** End if - version compare */
+
+		}
+		/** End if - response message exists */
+
+		/** Set transient - minimize calls to WordPress */
+		// set_transient( $transient_name, $upgrade_notice, DAY_IN_SECONDS );
+
+	}
+	/** End if - transient check */
+
+	echo $upgrade_notice;
+
+} /** End function - in plugin update message */
+
+
+/** Add Plugin Update Message */
+add_action( 'in_plugin_update_message-' . plugin_basename( __FILE__ ),  'BNS_SMF_Feeds_in_plugin_update_message' );
